@@ -48,18 +48,6 @@ func main() {
 		// Auth
 		api.POST("/auth/send-otp", authHandler.SendOTP)
 		api.POST("/auth/verify-otp", authHandler.VerifyOTP)
-
-		// Public match listing
-		api.GET("/matches", func(c *gin.Context) {
-			middleware.AuthMiddleware(db)(c)
-			if c.IsAborted() {
-				return
-			}
-			matchHandler.ListMatches(c)
-		})
-		api.GET("/leaderboard", func(c *gin.Context) {
-			userHandler.GetLeaderboard(c)
-		})
 	}
 
 	// Authenticated routes
