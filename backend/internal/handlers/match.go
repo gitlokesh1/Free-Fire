@@ -121,46 +121,58 @@ func (h *MatchHandler) JoinMatch(c *gin.Context) {
 		return
 	}
 
-	// Check player limit
-	var count int64
-	h.DB.Model(&models.MatchParticipant{}).Where("match_id = ?", match.ID).Count(&count)
-	if int(count) >= match.MaxPlayers {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Match is full"})
-		return
-	}
+	// Use a database transaction to atomically check balance, deduct fee, and add participant
+	participant := models.MatchParticipant{}
+	txErr := h.DB.Transaction(func(tx *gorm.DB) error {
+		// Lock user row and check balance
+		var freshUser models.User
+		if err := tx.Set("gorm:query_option", "FOR UPDATE").First(&freshUser, user.ID).Error; err != nil {
+			return err
+		}
+		if freshUser.WalletBalance < match.EntryFee {
+			return fmt.Errorf("insufficient balance")
+		}
 
-	// Check wallet balance
-	if user.WalletBalance < match.EntryFee {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Insufficient wallet balance"})
-		return
-	}
+		// Check player limit inside transaction
+		var count int64
+		tx.Model(&models.MatchParticipant{}).Where("match_id = ?", match.ID).Count(&count)
+		if int(count) >= match.MaxPlayers {
+			return fmt.Errorf("match is full")
+		}
 
-	// Deduct entry fee
-	if err := h.DB.Model(&user).Update("wallet_balance", gorm.Expr("wallet_balance - ?", match.EntryFee)).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to deduct entry fee"})
-		return
-	}
+		// Deduct entry fee
+		if err := tx.Model(&freshUser).Update("wallet_balance", gorm.Expr("wallet_balance - ?", match.EntryFee)).Error; err != nil {
+			return err
+		}
 
-	// Create transaction record
-	h.DB.Create(&models.WalletTransaction{
-		UserID:      user.ID,
-		Type:        "debit",
-		Amount:      match.EntryFee,
-		Description: fmt.Sprintf("Entry fee for match #%d: %s", match.ID, match.Title),
-		Status:      "approved",
+		// Create transaction record
+		if err := tx.Create(&models.WalletTransaction{
+			UserID:      user.ID,
+			Type:        "debit",
+			Amount:      match.EntryFee,
+			Description: fmt.Sprintf("Entry fee for match #%d: %s", match.ID, match.Title),
+			Status:      "approved",
+		}).Error; err != nil {
+			return err
+		}
+
+		// Create participant record
+		participant = models.MatchParticipant{
+			MatchID: match.ID,
+			UserID:  user.ID,
+			Status:  "joined",
+		}
+		return tx.Create(&participant).Error
 	})
-
-	// Create participant record
-	participant := models.MatchParticipant{
-		MatchID: match.ID,
-		UserID:  user.ID,
-		Status:  "joined",
-	}
-
-	if err := h.DB.Create(&participant).Error; err != nil {
-		// Refund entry fee on failure
-		h.DB.Model(&user).Update("wallet_balance", gorm.Expr("wallet_balance + ?", match.EntryFee))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to join match"})
+	if txErr != nil {
+		switch txErr.Error() {
+		case "insufficient balance":
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Insufficient wallet balance"})
+		case "match is full":
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Match is full"})
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to join match"})
+		}
 		return
 	}
 

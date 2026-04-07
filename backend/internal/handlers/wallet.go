@@ -91,42 +91,44 @@ func (h *WalletHandler) RequestWithdraw(c *gin.Context) {
 		return
 	}
 
-	// Refresh balance
-	h.DB.First(&user, user.ID)
-
-	if user.WalletBalance < req.Amount {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Insufficient balance"})
-		return
-	}
-
-	// Reserve the amount
-	if err := h.DB.Model(&user).Update("wallet_balance", gorm.Expr("wallet_balance - ?", req.Amount)).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to reserve amount"})
-		return
-	}
-
-	withdrawRequest := models.WithdrawRequest{
-		UserID: user.ID,
-		Amount: req.Amount,
-		UPIID:  req.UPIID,
-		Status: "pending",
-	}
-
-	if err := h.DB.Create(&withdrawRequest).Error; err != nil {
-		// Refund reserved amount
-		h.DB.Model(&user).Update("wallet_balance", gorm.Expr("wallet_balance + ?", req.Amount))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create request"})
-		return
-	}
-
-	// Create pending transaction
-	h.DB.Create(&models.WalletTransaction{
-		UserID:      user.ID,
-		Type:        "debit",
-		Amount:      req.Amount,
-		Description: fmt.Sprintf("Withdrawal request to UPI: %s", req.UPIID),
-		Status:      "pending",
+	// Use a database transaction to atomically check balance and deduct
+	var withdrawRequest models.WithdrawRequest
+	txErr := h.DB.Transaction(func(tx *gorm.DB) error {
+		var freshUser models.User
+		if err := tx.Set("gorm:query_option", "FOR UPDATE").First(&freshUser, user.ID).Error; err != nil {
+			return err
+		}
+		if freshUser.WalletBalance < req.Amount {
+			return fmt.Errorf("insufficient balance")
+		}
+		if err := tx.Model(&freshUser).Update("wallet_balance", gorm.Expr("wallet_balance - ?", req.Amount)).Error; err != nil {
+			return err
+		}
+		withdrawRequest = models.WithdrawRequest{
+			UserID: user.ID,
+			Amount: req.Amount,
+			UPIID:  req.UPIID,
+			Status: "pending",
+		}
+		if err := tx.Create(&withdrawRequest).Error; err != nil {
+			return err
+		}
+		return tx.Create(&models.WalletTransaction{
+			UserID:      user.ID,
+			Type:        "debit",
+			Amount:      req.Amount,
+			Description: fmt.Sprintf("Withdrawal request to UPI: %s", req.UPIID),
+			Status:      "pending",
+		}).Error
 	})
+	if txErr != nil {
+		if txErr.Error() == "insufficient balance" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Insufficient balance"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to process withdrawal request"})
+		}
+		return
+	}
 
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "Withdrawal request submitted. Pending admin approval.",

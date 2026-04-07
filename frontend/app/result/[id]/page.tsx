@@ -157,7 +157,7 @@ export default function ResultUploadPage() {
                 <li>• Your Free Fire UID must be clearly visible</li>
                 <li>• Kill count must be visible in screenshot</li>
                 <li>• Final result screen required (not in-game)</li>
-                <li>• Use the same account as your binded UID</li>
+                <li>• Use the same account as your bound UID</li>
               </ul>
             </div>
           </div>
