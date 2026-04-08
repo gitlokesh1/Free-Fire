@@ -1,0 +1,34 @@
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF4500"/>
+      <stop offset="100%" stop-color="#FFD700"/>
+    </linearGradient>
+    <linearGradient id="shieldFill" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e1e1e"/>
+      <stop offset="100%" stop-color="#0d0d0d"/>
+    </linearGradient>
+    <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Shield outer glow -->
+  <path d="M60 6 L106 27 L106 68 Q106 100 60 114 Q14 100 14 68 L14 27 Z"
+        fill="none" stroke="#FF4500" stroke-width="1" opacity="0.3" filter="url(#glowFilter)"/>
+  <!-- Shield body -->
+  <path d="M60 10 L102 29 L102 66 Q102 96 60 110 Q18 96 18 66 L18 29 Z"
+        fill="url(#shieldFill)" stroke="url(#logoGrad)" stroke-width="2.5"/>
+  <!-- Inner shield accent -->
+  <path d="M60 20 L93 35 L93 64 Q93 86 60 98 Q27 86 27 64 L27 35 Z"
+        fill="none" stroke="url(#logoGrad)" stroke-width="0.8" opacity="0.4"/>
+  <!-- BZ Letters -->
+  <text x="60" y="72" text-anchor="middle" font-family="Arial Black,Impact,sans-serif"
+        font-weight="900" font-size="38" fill="url(#logoGrad)" filter="url(#glowFilter)"
+        letter-spacing="-2">BZ</text>
+  <!-- Small crosshair dots -->
+  <circle cx="60" cy="28" r="1.5" fill="#FF4500" opacity="0.7"/>
+  <circle cx="60" cy="104" r="1.5" fill="#FFD700" opacity="0.7"/>
+  <circle cx="17" cy="68" r="1.5" fill="#FF4500" opacity="0.7"/>
+  <circle cx="103" cy="68" r="1.5" fill="#FFD700" opacity="0.7"/>
+</svg>

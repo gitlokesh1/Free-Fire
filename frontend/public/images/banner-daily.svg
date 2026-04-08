@@ -1,0 +1,58 @@
+<svg viewBox="0 0 800 240" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2a2000"/>
+      <stop offset="60%" stop-color="#1a1200"/>
+      <stop offset="100%" stop-color="#0A0A0A"/>
+    </linearGradient>
+    <linearGradient id="boltGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#FF8C00"/>
+    </linearGradient>
+    <filter id="glow2">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Background -->
+  <rect width="800" height="240" fill="url(#bg2)"/>
+  <!-- Gold glow blob -->
+  <ellipse cx="650" cy="120" rx="200" ry="130" fill="#FFD700" opacity="0.04"/>
+  <ellipse cx="400" cy="240" rx="300" ry="80" fill="#FF8C00" opacity="0.05"/>
+  <!-- Grid lines -->
+  <g opacity="0.06" stroke="#FFD700" stroke-width="1" fill="none">
+    <line x1="600" y1="0" x2="600" y2="240"/>
+    <line x1="650" y1="0" x2="650" y2="240"/>
+    <line x1="700" y1="0" x2="700" y2="240"/>
+    <line x1="750" y1="0" x2="750" y2="240"/>
+    <line x1="800" y1="0" x2="800" y2="240"/>
+    <line x1="575" y1="0" x2="800" y2="240"/>
+    <line x1="625" y1="0" x2="800" y2="188"/>
+  </g>
+  <!-- Main lightning bolt (large, right side) -->
+  <g transform="translate(580, 10)" filter="url(#glow2)" opacity="0.9">
+    <polygon points="85,5 55,110 80,110 50,235 110,100 82,100 112,5"
+             fill="url(#boltGrad)"/>
+  </g>
+  <!-- Smaller lightning bolts -->
+  <g transform="translate(690, 40)" opacity="0.5">
+    <polygon points="25,5 15,50 25,50 12,95 38,42 26,42 36,5"
+             fill="#FFD700"/>
+  </g>
+  <g transform="translate(730, 80)" opacity="0.3">
+    <polygon points="16,3 9,32 16,32 8,62 24,27 17,27 23,3"
+             fill="#FFD700"/>
+  </g>
+  <!-- Accent lines -->
+  <line x1="520" y1="0" x2="520" y2="240" stroke="#FFD700" stroke-width="1" opacity="0.15"/>
+  <line x1="0" y1="120" x2="520" y2="120" stroke="#FFD700" stroke-width="0.5" opacity="0.1"/>
+  <!-- Bottom accent -->
+  <rect x="0" y="233" width="800" height="7" fill="#FFD700" opacity="0.25"/>
+  <!-- Small stars -->
+  <polygon points="80,30 82,38 90,38 84,43 86,51 80,46 74,51 76,43 70,38 78,38"
+           fill="#FFD700" opacity="0.3" transform="scale(0.7) translate(40,20)"/>
+  <polygon points="380,20 382,28 390,28 384,33 386,41 380,36 374,41 376,33 370,28 378,28"
+           fill="#FFD700" opacity="0.25" transform="scale(0.5)"/>
+  <circle cx="490" cy="200" r="2" fill="#FFD700" opacity="0.4"/>
+  <circle cx="60" cy="180" r="1.5" fill="#FF8C00" opacity="0.4"/>
+</svg>

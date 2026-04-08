@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { sendOTP, verifyOTP } from '@/lib/api';
 import { setAuth } from '@/lib/utils';
 import { ArrowLeft, Flame } from 'lucide-react';
+import Image from 'next/image';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -93,16 +94,35 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0A0A0A]">
-      {/* Background effect */}
+      {/* Gaming background effect */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {/* Diagonal grid lines */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+              <path d="M 60 0 L 0 60" stroke="#FF4500" strokeWidth="1" fill="none"/>
+              <path d="M 0 0 L 60 60" stroke="#FF4500" strokeWidth="0.5" fill="none"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)"/>
+        </svg>
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FF4500]/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#FF4500]/5 rounded-full blur-3xl" />
       </div>
 
       <div className="flex-1 flex flex-col justify-center px-6 max-w-sm mx-auto w-full">
         {/* Logo */}
         <div className="text-center mb-10">
-          <div className="text-5xl mb-3 animate-float inline-block">🔥</div>
+          <div className="animate-float inline-block mb-3">
+            <Image
+              src="/images/logo.svg"
+              alt="BattleZone Arena Logo"
+              width={80}
+              height={80}
+              className="mx-auto drop-shadow-[0_0_12px_rgba(255,69,0,0.7)]"
+            />
+          </div>
           <h1
             className="text-3xl font-black gradient-text"
             style={{ fontFamily: 'Orbitron, sans-serif' }}

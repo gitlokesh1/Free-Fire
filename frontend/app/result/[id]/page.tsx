@@ -6,6 +6,57 @@ import { getResultDetails, uploadResult } from '@/lib/api';
 import { ArrowLeft, Upload, AlertTriangle, CheckCircle } from 'lucide-react';
 import Image from 'next/image';
 
+// Screenshot guide illustration
+function ScreenshotGuide() {
+  return (
+    <svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" className="w-full max-w-[220px] mx-auto">
+      <defs>
+        <linearGradient id="screenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FF4500" stopOpacity="0.15"/>
+          <stop offset="100%" stopColor="#FFD700" stopOpacity="0.05"/>
+        </linearGradient>
+        <linearGradient id="highlightGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#FF4500"/>
+          <stop offset="100%" stopColor="#FFD700"/>
+        </linearGradient>
+      </defs>
+      {/* Phone frame */}
+      <rect x="75" y="5" width="90" height="130" rx="10" fill="#1a1a1a" stroke="#2a2a2a" strokeWidth="2"/>
+      <rect x="80" y="15" width="80" height="110" rx="4" fill="url(#screenGrad)" stroke="#2a2a2a" strokeWidth="1"/>
+      {/* Screen content - result screen mockup */}
+      <rect x="82" y="17" width="76" height="106" rx="3" fill="#141414"/>
+      {/* Result screen header */}
+      <rect x="82" y="17" width="76" height="18" rx="3" fill="#1e1e1e"/>
+      <text x="120" y="29" textAnchor="middle" fontSize="5" fill="#FF4500" fontFamily="sans-serif" fontWeight="bold">MATCH RESULT</text>
+      {/* Kill count highlight */}
+      <rect x="88" y="42" width="64" height="20" rx="3" fill="#FF4500" opacity="0.15" stroke="#FF4500" strokeWidth="0.8"/>
+      <text x="120" y="50" textAnchor="middle" fontSize="4.5" fill="#aaa" fontFamily="sans-serif">KILLS</text>
+      <text x="120" y="59" textAnchor="middle" fontSize="10" fill="#FF4500" fontFamily="sans-serif" fontWeight="bold">5</text>
+      {/* Rank */}
+      <rect x="88" y="67" width="64" height="16" rx="3" fill="#FFD700" opacity="0.1" stroke="#FFD700" strokeWidth="0.8"/>
+      <text x="120" y="75" textAnchor="middle" fontSize="4.5" fill="#aaa" fontFamily="sans-serif">RANK</text>
+      <text x="120" y="81" textAnchor="middle" fontSize="7" fill="#FFD700" fontFamily="sans-serif" fontWeight="bold">#3</text>
+      {/* UID section with orange indicator */}
+      <rect x="88" y="88" width="64" height="14" rx="2" fill="#0a0a0a" stroke="#FF4500" strokeWidth="1"/>
+      <text x="92" y="93" fontSize="3.5" fill="#666" fontFamily="sans-serif">UID:</text>
+      <text x="92" y="100" fontSize="3.5" fill="#FF4500" fontFamily="sans-serif" fontWeight="bold">123456789</text>
+      {/* Arrow pointing to UID with label */}
+      <line x1="60" y1="95" x2="85" y2="95" stroke="#FF4500" strokeWidth="1.5" strokeDasharray="2,1"/>
+      <polygon points="83,93 87,95 83,97" fill="#FF4500"/>
+      <text x="10" y="90" fontSize="4" fill="#FF4500" fontFamily="sans-serif" fontWeight="bold">UID must</text>
+      <text x="10" y="96" fontSize="4" fill="#FF4500" fontFamily="sans-serif" fontWeight="bold">be visible</text>
+      {/* Arrow pointing to kills with label */}
+      <line x1="60" y1="52" x2="85" y2="52" stroke="#FF8C00" strokeWidth="1.5" strokeDasharray="2,1"/>
+      <polygon points="83,50 87,52 83,54" fill="#FF8C00"/>
+      <text x="10" y="47" fontSize="4" fill="#FF8C00" fontFamily="sans-serif" fontWeight="bold">Kill count</text>
+      <text x="10" y="53" fontSize="4" fill="#FF8C00" fontFamily="sans-serif" fontWeight="bold">required</text>
+      {/* Bottom guide bar -->*/}
+      <rect x="0" y="130" width="240" height="10" fill="none"/>
+      <line x1="10" y1="138" x2="230" y2="138" stroke="url(#highlightGrad)" strokeWidth="0.8" opacity="0.5"/>
+    </svg>
+  );
+}
+
 interface ResultDetails {
   participant: {
     status: string;
@@ -166,6 +217,13 @@ export default function ResultUploadPage() {
         {/* Upload Area */}
         {(!result || result.participant.status === 'joined') && (
           <div>
+            {/* Screenshot guide illustration */}
+            <div className="game-card p-4 mb-4 text-center">
+              <p className="text-gray-400 text-xs font-semibold mb-3 uppercase tracking-wider">Screenshot Guide</p>
+              <ScreenshotGuide />
+              <p className="text-gray-600 text-xs mt-2">Your screenshot should look similar to this</p>
+            </div>
+
             <input
               ref={fileRef}
               type="file"

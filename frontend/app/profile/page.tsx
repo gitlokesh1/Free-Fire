@@ -5,6 +5,7 @@ import { getProfile } from '@/lib/api';
 import { clearAuth, formatCurrency } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import BottomNav from '@/components/BottomNav';
 import { LogOut, ChevronRight, Trophy, Swords, Wallet, Users, HelpCircle, Shield } from 'lucide-react';
 
@@ -70,12 +71,33 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen pb-20 bg-[#0A0A0A]">
-      <div className="px-4 pt-8 pb-4">
+      {/* Gaming header banner */}
+      <div className="relative h-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#FF4500]/30 via-[#1a0a00] to-[#0A0A0A]">
+          {/* Decorative gaming pattern */}
+          <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 400 128" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <polygon points="350,10 390,30 390,70 350,90 310,70 310,30" fill="none" stroke="#FF4500" strokeWidth="1.5"/>
+            <polygon points="300,40 330,55 330,85 300,100 270,85 270,55" fill="none" stroke="#FFD700" strokeWidth="1"/>
+            <polygon points="360,60 380,70 380,90 360,100 340,90 340,70" fill="none" stroke="#FF4500" strokeWidth="0.8"/>
+            <line x1="0" y1="64" x2="400" y2="64" stroke="#FF4500" strokeWidth="0.5"/>
+            <circle cx="200" cy="64" r="40" fill="none" stroke="#FF4500" strokeWidth="0.5"/>
+          </svg>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent"/>
+      </div>
+
+      <div className="px-4 -mt-16 pb-4">
         {/* Profile Header */}
         <div className="game-card p-5 mb-4">
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FF4500] to-[#FFD700] flex items-center justify-center text-2xl font-black text-white">
-              {profile.user.ff_name?.[0] || profile.user.phone.slice(-2)}
+            {/* Avatar with SVG default */}
+            <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-[#FF4500]/60 glow-orange">
+              <Image
+                src="/images/avatar-default.svg"
+                alt={profile.user.ff_name || 'Player Avatar'}
+                fill
+                className="object-cover"
+              />
             </div>
             <div className="flex-1">
               <h2 className="text-xl font-black text-white">
