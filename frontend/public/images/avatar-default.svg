@@ -1,0 +1,52 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="avatarBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF4500"/>
+      <stop offset="100%" stop-color="#8B0000"/>
+    </linearGradient>
+    <linearGradient id="helmetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3a3a3a"/>
+      <stop offset="100%" stop-color="#1a1a1a"/>
+    </linearGradient>
+    <linearGradient id="visorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF4500" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#FF8C00" stop-opacity="0.7"/>
+    </linearGradient>
+    <clipPath id="circle">
+      <circle cx="50" cy="50" r="50"/>
+    </clipPath>
+  </defs>
+  <!-- Circle background -->
+  <circle cx="50" cy="50" r="50" fill="url(#avatarBg)"/>
+  <!-- Subtle hex pattern on bg -->
+  <g clip-path="url(#circle)" opacity="0.1">
+    <polygon points="50,5 62,12 62,26 50,33 38,26 38,12" fill="none" stroke="#FFD700" stroke-width="1"/>
+    <polygon points="62,26 74,33 74,47 62,54 50,47 50,33" fill="none" stroke="#FFD700" stroke-width="1"/>
+    <polygon points="38,26 50,33 50,47 38,54 26,47 26,33" fill="none" stroke="#FFD700" stroke-width="1"/>
+    <polygon points="50,47 62,54 62,68 50,75 38,68 38,54" fill="none" stroke="#FFD700" stroke-width="1"/>
+  </g>
+  <!-- Helmet body -->
+  <ellipse cx="50" cy="42" rx="24" ry="26" fill="url(#helmetGrad)"/>
+  <!-- Helmet top dome -->
+  <ellipse cx="50" cy="30" rx="20" ry="14" fill="#2d2d2d"/>
+  <!-- Visor -->
+  <path d="M32 45 Q33 55 40 58 L50 60 L60 58 Q67 55 68 45 Q60 42 50 42 Q40 42 32 45Z"
+        fill="url(#visorGrad)"/>
+  <!-- Visor shine -->
+  <path d="M36 46 Q37 52 42 54 L47 55" fill="none" stroke="white" stroke-width="1.5"
+        stroke-linecap="round" opacity="0.5"/>
+  <!-- Helmet side details -->
+  <rect x="26" y="40" width="4" height="12" rx="2" fill="#2a2a2a"/>
+  <rect x="70" y="40" width="4" height="12" rx="2" fill="#2a2a2a"/>
+  <!-- Orange accent stripe on helmet -->
+  <path d="M30 36 Q50 30 70 36" fill="none" stroke="#FF4500" stroke-width="2" opacity="0.8"/>
+  <!-- Chin/neck area -->
+  <path d="M38 62 Q44 68 50 70 Q56 68 62 62 L60 70 Q55 78 50 80 Q45 78 40 70 Z"
+        fill="#2d2d2d"/>
+  <!-- Shoulder pads -->
+  <ellipse cx="30" cy="82" rx="18" ry="10" fill="#2a2a2a"/>
+  <ellipse cx="70" cy="82" rx="18" ry="10" fill="#2a2a2a"/>
+  <!-- Shoulder orange accents -->
+  <line x1="20" y1="80" x2="40" y2="80" stroke="#FF4500" stroke-width="2" opacity="0.6"/>
+  <line x1="60" y1="80" x2="80" y2="80" stroke="#FF4500" stroke-width="2" opacity="0.6"/>
+</svg>

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Bell, ChevronLeft, ChevronRight, Trophy, Zap, Shield } from 'lucide-react';
+import Image from 'next/image';
+import { Bell, ChevronRight, Trophy, Zap, Shield } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 import MatchCard from '@/components/MatchCard';
 import { getMatches } from '@/lib/api';
@@ -27,18 +28,21 @@ const banners = [
     subtitle: 'Win up to ₹10,000',
     desc: '50 Players • Per Kill ₹5 • Solo',
     gradient: 'from-[#FF4500] to-[#8B0000]',
+    image: '/images/banner-tournament.svg',
   },
   {
     title: '⚡ DAILY BATTLES',
     subtitle: 'Join & Earn Daily',
     desc: 'Multiple matches every day',
     gradient: 'from-[#FFD700] to-[#FF8C00]',
+    image: '/images/banner-daily.svg',
   },
   {
     title: '🔥 SQUAD WARS',
     subtitle: 'Team up & Dominate',
     desc: '4v4 Squad matches available',
     gradient: 'from-[#4B0082] to-[#FF4500]',
+    image: '/images/banner-squad.svg',
   },
 ];
 
@@ -76,7 +80,13 @@ export default function HomePage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
         <div className="mb-8 animate-float">
-          <div className="text-6xl mb-4">🔥</div>
+          <Image
+            src="/images/logo.svg"
+            alt="BattleZone Arena"
+            width={96}
+            height={96}
+            className="mx-auto mb-4 drop-shadow-[0_0_16px_rgba(255,69,0,0.7)]"
+          />
           <h1 className="text-4xl font-black gradient-text tracking-wider" style={{ fontFamily: 'Orbitron, sans-serif' }}>
             BATTLEZONE
           </h1>
@@ -112,15 +122,24 @@ export default function HomePage() {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-[#0A0A0A]/90 backdrop-blur-sm border-b border-[#2a2a2a] px-4 py-3">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-lg font-black gradient-text" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-              BATTLEZONE 🔥
-            </h1>
-            {user && (
-              <p className="text-xs text-gray-500">
-                Welcome, {user.name || user.phone?.slice(-4) || 'Player'}
-              </p>
-            )}
+          <div className="flex items-center gap-2">
+            <Image
+              src="/images/logo.svg"
+              alt="BattleZone Arena"
+              width={32}
+              height={32}
+              className="drop-shadow-[0_0_6px_rgba(255,69,0,0.6)]"
+            />
+            <div>
+              <h1 className="text-lg font-black gradient-text" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+                BATTLEZONE
+              </h1>
+              {user && (
+                <p className="text-xs text-gray-500">
+                  Welcome, {user.name || user.phone?.slice(-4) || 'Player'}
+                </p>
+              )}
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <button className="text-gray-400 hover:text-white transition-colors">
@@ -139,11 +158,24 @@ export default function HomePage() {
         {/* Banner Slider */}
         <div className="relative mb-6 overflow-hidden rounded-xl">
           <div
-            className={`bg-gradient-to-r ${banners[bannerIdx].gradient} p-6 rounded-xl min-h-[120px] flex flex-col justify-center transition-all duration-500`}
+            className={`bg-gradient-to-r ${banners[bannerIdx].gradient} rounded-xl min-h-[140px] flex flex-col justify-center transition-all duration-500 relative overflow-hidden`}
           >
-            <h2 className="text-xl font-black text-white mb-1">{banners[bannerIdx].title}</h2>
-            <p className="text-white/90 font-bold">{banners[bannerIdx].subtitle}</p>
-            <p className="text-white/70 text-sm mt-1">{banners[bannerIdx].desc}</p>
+            {/* Background SVG image */}
+            <div className="absolute inset-0 rounded-xl overflow-hidden">
+              <Image
+                src={banners[bannerIdx].image}
+                alt={banners[bannerIdx].title}
+                fill
+                className="object-cover opacity-70"
+                priority
+              />
+            </div>
+            {/* Text content */}
+            <div className="relative z-10 p-6">
+              <h2 className="text-xl font-black text-white mb-1 drop-shadow-lg">{banners[bannerIdx].title}</h2>
+              <p className="text-white/90 font-bold drop-shadow">{banners[bannerIdx].subtitle}</p>
+              <p className="text-white/80 text-sm mt-1 drop-shadow">{banners[bannerIdx].desc}</p>
+            </div>
           </div>
           {/* Dots */}
           <div className="flex gap-1.5 justify-center mt-2">

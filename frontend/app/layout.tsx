@@ -4,6 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "BattleZone Arena — Free Fire Tournaments",
   description: "Win real money playing Free Fire tournaments. Join matches, compete, and earn!",
+  icons: {
+    icon: "/images/favicon.svg",
+  },
 };
 
 export default function RootLayout({

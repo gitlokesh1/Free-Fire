@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { getLeaderboard } from '@/lib/api';
 import { formatCurrency } from '@/lib/utils';
-import { ArrowLeft, Trophy, Swords, Star } from 'lucide-react';
+import { ArrowLeft, Trophy, Swords } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import BottomNav from '@/components/BottomNav';
 
@@ -41,6 +41,38 @@ export default function LeaderboardPage() {
 
   const medalColors = ['#FFD700', '#C0C0C0', '#CD7F32'];
   const medalEmojis = ['🥇', '🥈', '🥉'];
+
+  // SVG Trophy components for top 3
+  const TrophySVG = ({ rank }: { rank: number }) => {
+    const configs = [
+      { cup: '#FFD700', base: '#CC8800', star: '#FFF8DC', size: 52 },  // Gold
+      { cup: '#C0C0C0', base: '#909090', star: '#F0F0F0', size: 44 },  // Silver
+      { cup: '#CD7F32', base: '#8B5A1A', star: '#FFE0B0', size: 38 },  // Bronze
+    ];
+    const c = configs[rank] || configs[2];
+    return (
+      <svg width={c.size} height={c.size} viewBox="0 0 52 60" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id={`trophy${rank}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor={c.cup} stopOpacity="1"/>
+            <stop offset="100%" stopColor={c.base} stopOpacity="1"/>
+          </linearGradient>
+        </defs>
+        {/* Cup body */}
+        <path d="M13 5 L39 5 L36 32 Q26 40 16 32 Z" fill={`url(#trophy${rank})`}/>
+        {/* Handles */}
+        <path d="M13 8 Q4 8 4 18 Q4 28 13 28" fill="none" stroke={c.cup} strokeWidth="4" strokeLinecap="round"/>
+        <path d="M39 8 Q48 8 48 18 Q48 28 39 28" fill="none" stroke={c.cup} strokeWidth="4" strokeLinecap="round"/>
+        {/* Stem */}
+        <rect x="23" y="32" width="6" height="12" fill={c.base} rx="1"/>
+        {/* Base */}
+        <rect x="16" y="44" width="20" height="5" fill={c.base} rx="2"/>
+        {/* Star */}
+        <polygon points="26,10 28,16 34,16 29,20 31,26 26,22 21,26 23,20 18,16 24,16"
+                 fill={c.star} opacity="0.9"/>
+      </svg>
+    );
+  };
 
   return (
     <div className="min-h-screen pb-20 bg-[#0A0A0A]">
@@ -87,36 +119,51 @@ export default function LeaderboardPage() {
             <div className="flex items-end justify-center gap-3 mb-6 pt-4">
               {/* 2nd Place */}
               <div className="flex flex-col items-center flex-1">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-xl font-black text-white mb-2">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-xl font-black text-white mb-2 border-2 border-gray-400/50">
                   {entries[1].ff_name?.[0] || '?'}
                 </div>
                 <p className="text-white text-xs font-bold text-center line-clamp-1">{entries[1].ff_name || entries[1].name}</p>
                 <p className="text-[#FFD700] text-xs">{formatCurrency(entries[1].total_earnings)}</p>
-                <div className="bg-gradient-to-t from-gray-500 to-gray-700 rounded-t-lg w-full mt-2 flex items-center justify-center h-16">
-                  <span className="text-2xl">🥈</span>
+                <div className="bg-gradient-to-t from-gray-500 to-gray-700 rounded-t-lg w-full mt-2 flex flex-col items-center justify-center h-16 gap-1">
+                  <TrophySVG rank={1} />
+                  <span className="text-white text-xs font-bold">#2</span>
                 </div>
               </div>
               {/* 1st Place */}
               <div className="flex flex-col items-center flex-1">
-                <Star size={16} className="text-[#FFD700] mb-1 animate-pulse" />
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FFD700] to-[#FF8C00] flex items-center justify-center text-2xl font-black text-white mb-2 glow-gold">
+                {/* Crown SVG above 1st place */}
+                <svg width="28" height="20" viewBox="0 0 28 20" className="mb-1 animate-pulse" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="crownGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#FFD700"/>
+                      <stop offset="100%" stopColor="#FF8C00"/>
+                    </linearGradient>
+                  </defs>
+                  <polygon points="2,18 6,6 10,12 14,2 18,12 22,6 26,18" fill="url(#crownGrad)" stroke="#CC8800" strokeWidth="0.5"/>
+                  <circle cx="2" cy="18" r="2" fill="#FFD700"/>
+                  <circle cx="14" cy="2" r="2" fill="#FFD700"/>
+                  <circle cx="26" cy="18" r="2" fill="#FFD700"/>
+                </svg>
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FFD700] to-[#FF8C00] flex items-center justify-center text-2xl font-black text-white mb-2 border-2 border-[#FFD700] glow-gold">
                   {entries[0].ff_name?.[0] || '?'}
                 </div>
                 <p className="text-white text-xs font-bold text-center line-clamp-1">{entries[0].ff_name || entries[0].name}</p>
                 <p className="text-[#FFD700] text-xs font-bold">{formatCurrency(entries[0].total_earnings)}</p>
-                <div className="bg-gradient-to-t from-[#FFD700] to-[#FF8C00] rounded-t-lg w-full mt-2 flex items-center justify-center h-24">
-                  <span className="text-3xl">🥇</span>
+                <div className="bg-gradient-to-t from-[#FFD700] to-[#FF8C00] rounded-t-lg w-full mt-2 flex flex-col items-center justify-center h-24 gap-1">
+                  <TrophySVG rank={0} />
+                  <span className="text-white text-xs font-bold">#1</span>
                 </div>
               </div>
               {/* 3rd Place */}
               <div className="flex flex-col items-center flex-1">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center text-xl font-black text-white mb-2">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center text-xl font-black text-white mb-2 border-2 border-amber-600/50">
                   {entries[2].ff_name?.[0] || '?'}
                 </div>
                 <p className="text-white text-xs font-bold text-center line-clamp-1">{entries[2].ff_name || entries[2].name}</p>
                 <p className="text-[#FFD700] text-xs">{formatCurrency(entries[2].total_earnings)}</p>
-                <div className="bg-gradient-to-t from-amber-700 to-amber-500 rounded-t-lg w-full mt-2 flex items-center justify-center h-12">
-                  <span className="text-2xl">🥉</span>
+                <div className="bg-gradient-to-t from-amber-700 to-amber-500 rounded-t-lg w-full mt-2 flex flex-col items-center justify-center h-12 gap-1">
+                  <TrophySVG rank={2} />
+                  <span className="text-white text-xs font-bold">#3</span>
                 </div>
               </div>
             </div>
