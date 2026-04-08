@@ -4,8 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { sendOTP, verifyOTP } from '@/lib/api';
 import { setAuth } from '@/lib/utils';
-import { ArrowLeft, Flame } from 'lucide-react';
-import Image from 'next/image';
+import { ArrowLeft, Trophy } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -93,169 +92,134 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0A0A0A]">
-      {/* Gaming background effect */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {/* Diagonal grid lines */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
-              <path d="M 60 0 L 0 60" stroke="#FF4500" strokeWidth="1" fill="none"/>
-              <path d="M 0 0 L 60 60" stroke="#FF4500" strokeWidth="0.5" fill="none"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)"/>
-        </svg>
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FF4500]/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#FF4500]/5 rounded-full blur-3xl" />
-      </div>
-
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <div className="flex-1 flex flex-col justify-center px-6 max-w-sm mx-auto w-full">
         {/* Logo */}
-        <div className="text-center mb-10">
-          <div className="animate-float inline-block mb-3">
-            <Image
-              src="/images/logo.svg"
-              alt="BattleZone Arena Logo"
-              width={80}
-              height={80}
-              className="mx-auto drop-shadow-[0_0_12px_rgba(255,69,0,0.7)]"
-            />
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Trophy size={28} className="text-white" />
           </div>
-          <h1
-            className="text-3xl font-black gradient-text"
-            style={{ fontFamily: 'Orbitron, sans-serif' }}
-          >
-            BATTLEZONE
-          </h1>
-          <p className="text-[#FFD700] font-bold" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-            ARENA
-          </p>
+          <h1 className="text-2xl font-bold text-gray-900">BattleZone Arena</h1>
           <p className="text-gray-500 text-sm mt-1">Free Fire Tournament Platform</p>
         </div>
 
-        {step === 'phone' ? (
-          <div className="space-y-4">
-            <div>
-              <label className="text-gray-400 text-sm font-semibold mb-2 block">
-                📱 PHONE NUMBER
-              </label>
-              <div className="flex gap-2">
-                <div className="bg-[#141414] border border-[#2a2a2a] rounded-lg px-3 py-3 text-gray-400 text-sm flex items-center">
-                  +91
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+          {step === 'phone' ? (
+            <div className="space-y-4">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900 mb-1">Welcome back</h2>
+                <p className="text-gray-500 text-sm">Enter your phone number to continue</p>
+              </div>
+
+              <div>
+                <label className="text-gray-600 text-sm font-medium mb-2 block">Phone Number</label>
+                <div className="flex gap-2">
+                  <div className="bg-gray-50 border border-gray-300 rounded-lg px-3 py-3 text-gray-600 text-sm flex items-center">
+                    +91
+                  </div>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                    placeholder="10-digit number"
+                    className="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                    onKeyDown={(e) => e.key === 'Enter' && handleSendOTP()}
+                  />
                 </div>
+              </div>
+
+              <div>
+                <label className="text-gray-600 text-sm font-medium mb-2 block">Referral Code (Optional)</label>
                 <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                  placeholder="10-digit number"
-                  className="flex-1 bg-[#141414] border border-[#2a2a2a] rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#FF4500] transition-colors"
-                  onKeyDown={(e) => e.key === 'Enter' && handleSendOTP()}
+                  type="text"
+                  value={referral}
+                  onChange={(e) => setReferral(e.target.value.toUpperCase())}
+                  placeholder="Enter referral code"
+                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 />
               </div>
-            </div>
 
-            <div>
-              <label className="text-gray-400 text-sm font-semibold mb-2 block">
-                🎁 REFERRAL CODE (Optional)
-              </label>
-              <input
-                type="text"
-                value={referral}
-                onChange={(e) => setReferral(e.target.value.toUpperCase())}
-                placeholder="Enter referral code"
-                className="w-full bg-[#141414] border border-[#2a2a2a] rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#FFD700] transition-colors"
-              />
-            </div>
-
-            {error && (
-              <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3">
-                <p className="text-red-400 text-sm">{error}</p>
-              </div>
-            )}
-
-            <button
-              onClick={handleSendOTP}
-              disabled={loading}
-              className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <>
-                  <Flame size={18} />
-                  SEND OTP
-                </>
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <p className="text-red-600 text-sm">{error}</p>
+                </div>
               )}
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <button
-              onClick={() => setStep('phone')}
-              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
-            >
-              <ArrowLeft size={16} />
-              <span className="text-sm">Change Number</span>
-            </button>
 
-            <div>
-              <label className="text-gray-400 text-sm font-semibold mb-1 block">
-                ENTER OTP
-              </label>
-              <p className="text-gray-600 text-xs mb-4">
-                Sent to +91 {phone}
-              </p>
-              <div className="flex gap-2 justify-center">
-                {otp.map((digit, index) => (
-                  <input
-                    key={index}
-                    ref={(el) => { otpRefs.current[index] = el; }}
-                    type="text"
-                    inputMode="numeric"
-                    value={digit}
-                    onChange={(e) => handleOTPChange(index, e.target.value)}
-                    onKeyDown={(e) => handleOTPKeyDown(index, e)}
-                    className="w-11 h-12 bg-[#141414] border border-[#2a2a2a] rounded-lg text-center text-white font-bold text-lg focus:outline-none focus:border-[#FF4500] transition-colors"
-                    maxLength={1}
-                  />
-                ))}
+              <button
+                onClick={handleSendOTP}
+                disabled={loading}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {loading ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  'Send OTP'
+                )}
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <button
+                onClick={() => setStep('phone')}
+                className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <ArrowLeft size={16} />
+                <span className="text-sm">Change Number</span>
+              </button>
+
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900 mb-1">Verify OTP</h2>
+                <p className="text-gray-500 text-sm mb-4">Sent to +91 {phone}</p>
+                <div className="flex gap-2 justify-center">
+                  {otp.map((digit, index) => (
+                    <input
+                      key={index}
+                      ref={(el) => { otpRefs.current[index] = el; }}
+                      type="text"
+                      inputMode="numeric"
+                      value={digit}
+                      onChange={(e) => handleOTPChange(index, e.target.value)}
+                      onKeyDown={(e) => handleOTPKeyDown(index, e)}
+                      className="w-11 h-12 bg-white border border-gray-300 rounded-lg text-center text-gray-900 font-bold text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                      maxLength={1}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <p className="text-red-600 text-sm">{error}</p>
+                </div>
+              )}
+
+              <button
+                onClick={handleVerifyOTP}
+                disabled={loading}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {loading ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  'Verify & Login'
+                )}
+              </button>
+
+              <div className="text-center">
+                {timer > 0 ? (
+                  <p className="text-gray-400 text-sm">Resend in {timer}s</p>
+                ) : (
+                  <button
+                    onClick={handleSendOTP}
+                    className="text-indigo-600 text-sm font-medium hover:text-indigo-700 transition-colors"
+                  >
+                    Resend OTP
+                  </button>
+                )}
               </div>
             </div>
-
-            {error && (
-              <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3">
-                <p className="text-red-400 text-sm">{error}</p>
-              </div>
-            )}
-
-            <button
-              onClick={handleVerifyOTP}
-              disabled={loading}
-              className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                '✅ VERIFY & LOGIN'
-              )}
-            </button>
-
-            <div className="text-center">
-              {timer > 0 ? (
-                <p className="text-gray-500 text-sm">Resend in {timer}s</p>
-              ) : (
-                <button
-                  onClick={handleSendOTP}
-                  className="text-[#FF4500] text-sm font-semibold hover:text-[#FF6500] transition-colors"
-                >
-                  Resend OTP
-                </button>
-              )}
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
