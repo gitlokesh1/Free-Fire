@@ -26,12 +26,12 @@ export default function BottomNav() {
               href={item.href}
               className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-all ${
                 isActive
-                  ? 'text-[#FF4500] glow-orange'
-                  : 'text-gray-500 hover:text-gray-300'
+                  ? 'text-indigo-600'
+                  : 'text-gray-400 hover:text-gray-600'
               }`}
             >
-              <Icon size={22} className={isActive ? 'text-[#FF4500]' : ''} />
-              <span className="text-xs font-semibold">{item.label}</span>
+              <Icon size={22} />
+              <span className="text-xs font-medium">{item.label}</span>
             </Link>
           );
         })}

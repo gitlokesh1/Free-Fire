@@ -4,9 +4,8 @@ import { useState, useEffect } from 'react';
 import { getMatches } from '@/lib/api';
 import MatchCard from '@/components/MatchCard';
 import BottomNav from '@/components/BottomNav';
-import { ArrowLeft, Plus } from 'lucide-react';
+import { ArrowLeft, Swords } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 interface Match {
   id: number;
@@ -47,19 +46,17 @@ export default function MatchesPage() {
     : matches.filter((m) => m.type === filter);
 
   return (
-    <div className="min-h-screen pb-20 bg-[#0A0A0A]">
-      <div className="sticky top-0 z-50 bg-[#0A0A0A]/90 backdrop-blur-sm border-b border-[#2a2a2a] px-4 py-3 flex items-center justify-between">
+    <div className="min-h-screen pb-20 bg-gray-50">
+      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button onClick={() => router.back()}>
-            <ArrowLeft size={20} className="text-gray-400" />
+            <ArrowLeft size={20} className="text-gray-500" />
           </button>
-          <h1 className="font-bold text-white">🎮 Matches</h1>
+          <h1 className="font-semibold text-gray-900 flex items-center gap-2">
+            <Swords size={18} className="text-indigo-600" />
+            Matches
+          </h1>
         </div>
-        <Link href="/matches/create">
-          <button className="flex items-center gap-1 text-[#FF4500] text-sm font-semibold">
-            <Plus size={16} /> Create
-          </button>
-        </Link>
       </div>
 
       {/* Filter tabs */}
@@ -68,13 +65,13 @@ export default function MatchesPage() {
           <button
             key={t}
             onClick={() => setFilter(t)}
-            className={`flex-shrink-0 px-4 py-2 rounded-lg text-sm font-bold capitalize transition-all ${
+            className={`flex-shrink-0 px-4 py-2 rounded-lg text-sm font-medium capitalize transition-all ${
               filter === t
-                ? 'bg-[#FF4500] text-white'
-                : 'bg-[#141414] border border-[#2a2a2a] text-gray-400'
+                ? 'bg-indigo-600 text-white'
+                : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'
             }`}
           >
-            {t === 'all' ? '🔥 All' : t}
+            {t === 'all' ? 'All' : t}
           </button>
         ))}
       </div>
@@ -82,12 +79,12 @@ export default function MatchesPage() {
       <div className="px-4 pt-2">
         {loading ? (
           <div className="flex justify-center py-12">
-            <div className="w-8 h-8 border-2 border-[#FF4500] border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-4xl mb-3">🎮</p>
-            <p className="text-gray-400">No matches found</p>
+          <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
+            <Swords size={40} className="mx-auto text-gray-300 mb-3" />
+            <p className="text-gray-500">No matches found</p>
           </div>
         ) : (
           <div className="space-y-4">

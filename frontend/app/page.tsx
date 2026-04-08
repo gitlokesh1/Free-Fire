@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Bell, ChevronRight, Trophy, Zap, Shield } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 import MatchCard from '@/components/MatchCard';
@@ -24,25 +23,22 @@ interface Match {
 
 const banners = [
   {
-    title: '🏆 MEGA TOURNAMENT',
+    title: 'Mega Tournament',
     subtitle: 'Win up to ₹10,000',
     desc: '50 Players • Per Kill ₹5 • Solo',
-    gradient: 'from-[#FF4500] to-[#8B0000]',
-    image: '/images/banner-tournament.svg',
+    bg: 'bg-indigo-600',
   },
   {
-    title: '⚡ DAILY BATTLES',
+    title: 'Daily Battles',
     subtitle: 'Join & Earn Daily',
     desc: 'Multiple matches every day',
-    gradient: 'from-[#FFD700] to-[#FF8C00]',
-    image: '/images/banner-daily.svg',
+    bg: 'bg-emerald-600',
   },
   {
-    title: '🔥 SQUAD WARS',
+    title: 'Squad Wars',
     subtitle: 'Team up & Dominate',
     desc: '4v4 Squad matches available',
-    gradient: 'from-[#4B0082] to-[#FF4500]',
-    image: '/images/banner-squad.svg',
+    bg: 'bg-violet-600',
   },
 ];
 
@@ -78,76 +74,63 @@ export default function HomePage() {
 
   if (!isLoggedIn()) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
-        <div className="mb-8 animate-float">
-          <Image
-            src="/images/logo.svg"
-            alt="BattleZone Arena"
-            width={96}
-            height={96}
-            className="mx-auto mb-4 drop-shadow-[0_0_16px_rgba(255,69,0,0.7)]"
-          />
-          <h1 className="text-4xl font-black gradient-text tracking-wider" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-            BATTLEZONE
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center bg-white">
+        <div className="mb-8">
+          <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Trophy size={32} className="text-white" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900">
+            BattleZone Arena
           </h1>
-          <h2 className="text-2xl font-bold text-[#FFD700]" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-            ARENA
-          </h2>
-          <p className="text-gray-400 mt-2 text-sm">Free Fire Tournament Platform</p>
+          <p className="text-gray-500 mt-2 text-sm">Free Fire Tournament Platform</p>
         </div>
 
         <div className="grid grid-cols-3 gap-4 mb-8 w-full max-w-sm">
           {[
-            { icon: Trophy, label: 'Win Cash', color: '#FFD700' },
-            { icon: Zap, label: 'Per Kill ₹', color: '#FF4500' },
-            { icon: Shield, label: 'Secure', color: '#64C864' },
-          ].map(({ icon: Icon, label, color }) => (
-            <div key={label} className="game-card p-3 text-center">
-              <Icon size={24} className="mx-auto mb-1" style={{ color }} />
-              <p className="text-xs text-gray-400">{label}</p>
+            { icon: Trophy, label: 'Win Cash', bg: 'bg-amber-50', color: 'text-amber-600' },
+            { icon: Zap, label: 'Per Kill ₹', bg: 'bg-indigo-50', color: 'text-indigo-600' },
+            { icon: Shield, label: 'Secure', bg: 'bg-emerald-50', color: 'text-emerald-600' },
+          ].map(({ icon: Icon, label, bg, color }) => (
+            <div key={label} className={`${bg} rounded-xl p-3 text-center`}>
+              <Icon size={24} className={`${color} mx-auto mb-1`} />
+              <p className="text-xs text-gray-600 font-medium">{label}</p>
             </div>
           ))}
         </div>
 
-        <Link href="/login" className="btn-primary w-full max-w-sm text-center block animate-pulse-glow">
-          LOGIN / SIGNUP 🔥
+        <Link href="/login" className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg w-full max-w-sm text-center block transition-colors">
+          Login / Sign Up
         </Link>
-        <p className="text-gray-600 text-xs mt-4">Phone OTP • Instant • Secure</p>
+        <p className="text-gray-400 text-xs mt-4">Phone OTP • Instant • Secure</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen pb-20 bg-gray-50">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#0A0A0A]/90 backdrop-blur-sm border-b border-[#2a2a2a] px-4 py-3">
+      <header className="sticky top-0 z-50 bg-white border-b border-gray-200 px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Image
-              src="/images/logo.svg"
-              alt="BattleZone Arena"
-              width={32}
-              height={32}
-              className="drop-shadow-[0_0_6px_rgba(255,69,0,0.6)]"
-            />
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+              <Trophy size={16} className="text-white" />
+            </div>
             <div>
-              <h1 className="text-lg font-black gradient-text" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-                BATTLEZONE
-              </h1>
+              <h1 className="text-base font-bold text-gray-900">BattleZone</h1>
               {user && (
-                <p className="text-xs text-gray-500">
-                  Welcome, {user.name || user.phone?.slice(-4) || 'Player'}
+                <p className="text-xs text-gray-400">
+                  Hi, {user.name || user.phone?.slice(-4) || 'Player'}
                 </p>
               )}
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button className="text-gray-400 hover:text-white transition-colors">
+            <button className="text-gray-400 hover:text-gray-600 transition-colors">
               <Bell size={20} />
             </button>
             <Link href="/profile">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#FF4500] to-[#FFD700] flex items-center justify-center text-xs font-bold">
-                {user?.name?.[0] || '?'}
+              <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-semibold text-indigo-600">
+                {user?.name?.[0]?.toUpperCase() || '?'}
               </div>
             </Link>
           </div>
@@ -157,25 +140,10 @@ export default function HomePage() {
       <div className="px-4 pt-4">
         {/* Banner Slider */}
         <div className="relative mb-6 overflow-hidden rounded-xl">
-          <div
-            className={`bg-gradient-to-r ${banners[bannerIdx].gradient} rounded-xl min-h-[140px] flex flex-col justify-center transition-all duration-500 relative overflow-hidden`}
-          >
-            {/* Background SVG image */}
-            <div className="absolute inset-0 rounded-xl overflow-hidden">
-              <Image
-                src={banners[bannerIdx].image}
-                alt={banners[bannerIdx].title}
-                fill
-                className="object-cover opacity-70"
-                priority
-              />
-            </div>
-            {/* Text content */}
-            <div className="relative z-10 p-6">
-              <h2 className="text-xl font-black text-white mb-1 drop-shadow-lg">{banners[bannerIdx].title}</h2>
-              <p className="text-white/90 font-bold drop-shadow">{banners[bannerIdx].subtitle}</p>
-              <p className="text-white/80 text-sm mt-1 drop-shadow">{banners[bannerIdx].desc}</p>
-            </div>
+          <div className={`${banners[bannerIdx].bg} rounded-xl min-h-[130px] flex flex-col justify-center transition-all duration-500 p-6`}>
+            <h2 className="text-xl font-bold text-white mb-1">{banners[bannerIdx].title}</h2>
+            <p className="text-white/90 font-semibold">{banners[bannerIdx].subtitle}</p>
+            <p className="text-white/75 text-sm mt-1">{banners[bannerIdx].desc}</p>
           </div>
           {/* Dots */}
           <div className="flex gap-1.5 justify-center mt-2">
@@ -184,7 +152,7 @@ export default function HomePage() {
                 key={i}
                 onClick={() => setBannerIdx(i)}
                 className={`h-1.5 rounded-full transition-all ${
-                  i === bannerIdx ? 'bg-[#FF4500] w-6' : 'bg-gray-600 w-1.5'
+                  i === bannerIdx ? 'bg-indigo-600 w-6' : 'bg-gray-300 w-1.5'
                 }`}
               />
             ))}
@@ -193,19 +161,23 @@ export default function HomePage() {
 
         {/* Quick Stats */}
         {user && (
-          <div className="game-card p-4 mb-6 flex items-center justify-between">
+          <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6 flex items-center justify-between shadow-sm">
             <div className="text-center">
-              <p className="text-[#FFD700] font-bold text-lg">₹{user.wallet_balance || 0}</p>
-              <p className="text-gray-500 text-xs">Wallet</p>
+              <p className="text-indigo-600 font-bold text-lg">₹{user.wallet_balance || 0}</p>
+              <p className="text-gray-400 text-xs">Wallet</p>
             </div>
-            <div className="h-8 w-px bg-[#2a2a2a]" />
+            <div className="h-8 w-px bg-gray-200" />
             <div className="text-center">
-              <p className="text-[#FF4500] font-bold text-lg">{user.ff_uid ? '✅' : '❌'}</p>
-              <p className="text-gray-500 text-xs">UID Bound</p>
+              <p className={`font-bold text-lg ${user.ff_uid ? 'text-emerald-500' : 'text-red-400'}`}>
+                {user.ff_uid ? 'Linked' : 'Not Set'}
+              </p>
+              <p className="text-gray-400 text-xs">UID Status</p>
             </div>
-            <div className="h-8 w-px bg-[#2a2a2a]" />
+            <div className="h-8 w-px bg-gray-200" />
             <Link href="/wallet">
-              <button className="btn-primary text-xs py-2 px-3 rounded-lg">Add ₹</button>
+              <button className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs py-2 px-3 rounded-lg font-medium transition-colors">
+                Add ₹
+              </button>
             </Link>
           </div>
         )}
@@ -213,35 +185,33 @@ export default function HomePage() {
         {/* UID Bind Alert */}
         {user && !user.ff_uid && (
           <Link href="/bind-uid">
-            <div className="bg-[#FF4500]/10 border border-[#FF4500] rounded-xl p-3 mb-4 flex items-center justify-between">
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 flex items-center justify-between">
               <div>
-                <p className="text-[#FF4500] font-bold text-sm">⚠️ Bind Your Free Fire UID</p>
-                <p className="text-gray-400 text-xs">Required to join matches</p>
+                <p className="text-amber-700 font-semibold text-sm">Bind Your Free Fire UID</p>
+                <p className="text-amber-600 text-xs">Required to join matches</p>
               </div>
-              <ChevronRight size={16} className="text-[#FF4500]" />
+              <ChevronRight size={16} className="text-amber-500" />
             </div>
           </Link>
         )}
 
         {/* Live Matches */}
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg font-black text-white">
-            🔥 LIVE MATCHES
-          </h2>
-          <Link href="/matches" className="text-[#FF4500] text-sm font-semibold">
+          <h2 className="text-base font-semibold text-gray-900">Live Matches</h2>
+          <Link href="/matches" className="text-indigo-600 text-sm font-medium">
             View All
           </Link>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="w-8 h-8 border-2 border-[#FF4500] border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : matches.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-4xl mb-3">🎮</p>
-            <p className="text-gray-400">No matches available right now</p>
-            <p className="text-gray-600 text-sm mt-1">Check back soon!</p>
+          <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
+            <Trophy size={40} className="mx-auto text-gray-300 mb-3" />
+            <p className="text-gray-500 font-medium">No matches available right now</p>
+            <p className="text-gray-400 text-sm mt-1">Check back soon!</p>
           </div>
         ) : (
           <div className="space-y-4">

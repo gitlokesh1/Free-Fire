@@ -14,7 +14,6 @@ import {
   Menu, X, Trophy, Gift, Shield
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 interface DashboardStats {
   total_users: number;
@@ -39,16 +38,13 @@ export default function AdminDashboard() {
   const [referrals, setReferrals] = useState<Referral[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Verify result state
   const [verifyState, setVerifyState] = useState<Record<number, { kills: string; rank: string; bonus: string }>>({});
 
-  // Create match state
   const [newMatch, setNewMatch] = useState({
     title: '', type: 'solo', entry_fee: '', per_kill_reward: '',
     max_players: '', map: 'Bermuda', room_id: '', room_password: '', scheduled_at: '',
   });
 
-  // Bonus award state
   const [bonusData, setBonusData] = useState({ user_id: '', amount: '', match_id: '', reason: '' });
 
   useEffect(() => {
@@ -159,18 +155,33 @@ export default function AdminDashboard() {
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
+  const inputClass = "w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500";
+
   return (
-    <div className="min-h-screen bg-[#0A0A0A] flex">
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Sidebar Backdrop */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 z-40 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#0D0D0D] border-r border-[#2a2a2a] transform transition-transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:static md:z-auto`}>
-        <div className="p-4 border-b border-[#2a2a2a] flex items-center justify-between">
-          <div>
-            <h1 className="text-[#FF4500] font-black" style={{ fontFamily: 'Orbitron' }}>ADMIN</h1>
-            <p className="text-gray-600 text-xs">BattleZone Arena</p>
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:static md:z-auto`}>
+        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+              <Shield size={16} className="text-white" />
+            </div>
+            <div>
+              <h1 className="text-gray-900 font-bold text-sm">Admin Panel</h1>
+              <p className="text-gray-400 text-xs">BattleZone Arena</p>
+            </div>
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="md:hidden text-gray-400"
+            className="md:hidden text-gray-400 hover:text-gray-600"
           >
             <X size={20} />
           </button>
@@ -184,14 +195,14 @@ export default function AdminDashboard() {
                 onClick={() => { setActiveTab(item.id); setSidebarOpen(false); }}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm transition-all ${
                   activeTab === item.id
-                    ? 'bg-[#FF4500]/20 text-[#FF4500] border border-[#FF4500]/30'
-                    : 'text-gray-400 hover:text-white hover:bg-[#1a1a1a]'
+                    ? 'bg-indigo-50 text-indigo-700 font-medium'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
-                <Icon size={16} />
+                <Icon size={16} className={activeTab === item.id ? 'text-indigo-600' : ''} />
                 <span className="flex-1">{item.label}</span>
                 {item.badge ? (
-                  <span className="bg-[#FF4500] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                  <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
                     {item.badge}
                   </span>
                 ) : null}
@@ -199,10 +210,10 @@ export default function AdminDashboard() {
             );
           })}
         </nav>
-        <div className="p-3 border-t border-[#2a2a2a] absolute bottom-0 w-full">
+        <div className="p-3 border-t border-gray-200 absolute bottom-0 w-full">
           <button
             onClick={() => router.push('/')}
-            className="w-full text-gray-500 text-sm py-2 hover:text-white"
+            className="w-full text-gray-500 text-sm py-2 hover:text-gray-700 transition-colors"
           >
             ← Back to Site
           </button>
@@ -212,38 +223,38 @@ export default function AdminDashboard() {
       {/* Main Content */}
       <div className="flex-1 overflow-auto">
         {/* Top bar */}
-        <div className="sticky top-0 z-40 bg-[#0A0A0A]/90 backdrop-blur-sm border-b border-[#2a2a2a] px-4 py-3 flex items-center gap-3">
+        <div className="sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="md:hidden text-gray-400"
+            className="md:hidden text-gray-500"
           >
             <Menu size={20} />
           </button>
-          <h2 className="text-white font-bold capitalize">{activeTab}</h2>
+          <h2 className="text-gray-900 font-semibold capitalize">{activeTab.replace('_', ' ')}</h2>
         </div>
 
         <div className="p-4">
           {loading ? (
             <div className="flex justify-center py-12">
-              <div className="w-8 h-8 border-2 border-[#FF4500] border-t-transparent rounded-full animate-spin" />
+              <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
             </div>
           ) : (
             <>
               {/* Dashboard Stats */}
               {activeTab === 'dashboard' && stats && (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div className="space-y-6">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {[
-                      { label: 'Total Users', value: stats.total_users, color: '#FF4500' },
-                      { label: 'Total Matches', value: stats.total_matches, color: '#FFD700' },
-                      { label: 'Revenue', value: formatCurrency(stats.total_revenue), color: '#64C864' },
-                      { label: 'Pending Results', value: stats.pending_results, color: '#FF6B35' },
-                      { label: 'Pending Add Money', value: stats.pending_add_money, color: '#9B59B6' },
-                      { label: 'Pending Withdrawals', value: stats.pending_withdrawals, color: '#5B9BD5' },
+                      { label: 'Total Users', value: stats.total_users, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+                      { label: 'Total Matches', value: stats.total_matches, color: 'text-blue-600', bg: 'bg-blue-50' },
+                      { label: 'Revenue', value: formatCurrency(stats.total_revenue), color: 'text-emerald-600', bg: 'bg-emerald-50' },
+                      { label: 'Pending Results', value: stats.pending_results, color: 'text-red-600', bg: 'bg-red-50' },
+                      { label: 'Pending Add Money', value: stats.pending_add_money, color: 'text-amber-600', bg: 'bg-amber-50' },
+                      { label: 'Pending Withdrawals', value: stats.pending_withdrawals, color: 'text-purple-600', bg: 'bg-purple-50' },
                     ].map((stat) => (
-                      <div key={stat.label} className="game-card p-4">
-                        <p className="text-gray-400 text-xs mb-1">{stat.label}</p>
-                        <p className="text-2xl font-black" style={{ color: stat.color }}>
+                      <div key={stat.label} className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+                        <p className="text-gray-500 text-xs mb-1">{stat.label}</p>
+                        <p className={`text-2xl font-bold ${stat.color}`}>
                           {stat.value}
                         </p>
                       </div>
@@ -251,8 +262,8 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* Create Match Form */}
-                  <div className="game-card p-4">
-                    <h3 className="text-white font-bold mb-4">➕ Create New Match</h3>
+                  <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                    <h3 className="text-gray-900 font-semibold mb-4">Create New Match</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {[
                         { key: 'title', placeholder: 'Match Title', type: 'text' },
@@ -268,13 +279,13 @@ export default function AdminDashboard() {
                           placeholder={placeholder}
                           value={newMatch[key as keyof typeof newMatch]}
                           onChange={(e) => setNewMatch({ ...newMatch, [key]: e.target.value })}
-                          className="bg-[#0A0A0A] border border-[#2a2a2a] rounded-lg px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-[#FF4500]"
+                          className={inputClass}
                         />
                       ))}
                       <select
                         value={newMatch.type}
                         onChange={(e) => setNewMatch({ ...newMatch, type: e.target.value })}
-                        className="bg-[#0A0A0A] border border-[#2a2a2a] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#FF4500]"
+                        className={inputClass}
                       >
                         {['solo', 'duo', 'squad', 'custom'].map((t) => (
                           <option key={t} value={t}>{t.toUpperCase()}</option>
@@ -283,7 +294,7 @@ export default function AdminDashboard() {
                       <select
                         value={newMatch.map}
                         onChange={(e) => setNewMatch({ ...newMatch, map: e.target.value })}
-                        className="bg-[#0A0A0A] border border-[#2a2a2a] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#FF4500]"
+                        className={inputClass}
                       >
                         {['Bermuda', 'Purgatory', 'Kalahari', 'Alpine', 'Next Stream'].map((m) => (
                           <option key={m} value={m}>{m}</option>
@@ -293,11 +304,11 @@ export default function AdminDashboard() {
                         type="datetime-local"
                         value={newMatch.scheduled_at}
                         onChange={(e) => setNewMatch({ ...newMatch, scheduled_at: new Date(e.target.value).toISOString() })}
-                        className="bg-[#0A0A0A] border border-[#2a2a2a] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#FF4500] col-span-1 md:col-span-2"
+                        className={`${inputClass} col-span-1 md:col-span-2`}
                       />
                     </div>
-                    <button onClick={handleCreateMatch} className="btn-primary mt-4 w-full">
-                      CREATE MATCH 🎮
+                    <button onClick={handleCreateMatch} className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 px-4 rounded-lg mt-4 w-full transition-colors">
+                      Create Match
                     </button>
                   </div>
                 </div>
@@ -307,23 +318,23 @@ export default function AdminDashboard() {
               {activeTab === 'matches' && (
                 <div className="space-y-3">
                   {matches.map((match) => (
-                    <div key={match.id} className="game-card p-4">
+                    <div key={match.id} className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
                       <div className="flex items-start justify-between">
                         <div>
-                          <p className="text-white font-bold">{match.title}</p>
+                          <p className="text-gray-900 font-semibold">{match.title}</p>
                           <p className="text-gray-500 text-sm">
                             {match.type.toUpperCase()} • {match.map} • {formatCurrency(match.entry_fee)} entry
                           </p>
-                          <p className="text-gray-600 text-xs">{formatDate(match.scheduled_at)}</p>
+                          <p className="text-gray-400 text-xs">{formatDate(match.scheduled_at)}</p>
                         </div>
                         <span className={`badge-${match.status === 'live' ? 'live' : match.status === 'upcoming' ? 'upcoming' : 'completed'}`}>
                           {match.status}
                         </span>
                       </div>
-                      <div className="flex gap-4 mt-2 text-xs text-gray-500">
-                        <span>🏠 {match.room_id || 'No Room ID'}</span>
-                        <span>🔑 {match.room_password || 'No Password'}</span>
-                        <span>👥 {match.participants?.length || 0}/{match.max_players}</span>
+                      <div className="flex gap-4 mt-2 text-xs text-gray-400">
+                        <span>Room: {match.room_id || 'N/A'}</span>
+                        <span>Pass: {match.room_password || 'N/A'}</span>
+                        <span>Players: {match.participants?.length || 0}/{match.max_players}</span>
                       </div>
                     </div>
                   ))}
@@ -335,26 +346,26 @@ export default function AdminDashboard() {
                 <div className="space-y-4">
                   {pendingResults.length === 0 ? (
                     <div className="text-center py-12">
-                      <CheckSquare size={32} className="mx-auto text-green-400 mb-2" />
-                      <p className="text-gray-400">No pending results</p>
+                      <CheckSquare size={32} className="mx-auto text-emerald-500 mb-2" />
+                      <p className="text-gray-500">No pending results</p>
                     </div>
                   ) : (
                     pendingResults.map((result) => (
-                      <div key={result.id} className="game-card p-4">
+                      <div key={result.id} className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
                         <div className="flex items-start justify-between mb-3">
                           <div>
-                            <p className="text-white font-bold">{result.user?.ff_name || result.user?.name}</p>
+                            <p className="text-gray-900 font-semibold">{result.user?.ff_name || result.user?.name}</p>
                             <p className="text-gray-500 text-xs">UID: {result.user?.ff_uid}</p>
                             <p className="text-gray-500 text-xs">Match: {result.match?.title}</p>
                           </div>
-                          <p className="text-gray-500 text-xs">{formatDate(result.created_at)}</p>
+                          <p className="text-gray-400 text-xs">{formatDate(result.created_at)}</p>
                         </div>
 
                         {result.screenshot_url && (
                           <div className="mb-3">
                             <a href={result.screenshot_url} target="_blank" rel="noopener noreferrer">
-                              <div className="bg-[#0A0A0A] rounded-lg p-2 text-center text-[#FF4500] text-sm hover:underline">
-                                📸 View Screenshot
+                              <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-2 text-center text-indigo-600 text-sm hover:bg-indigo-100 transition-colors">
+                                View Screenshot
                               </div>
                             </a>
                           </div>
@@ -375,7 +386,7 @@ export default function AdminDashboard() {
                                 ...prev,
                                 [result.id]: { ...prev[result.id], [key]: e.target.value }
                               }))}
-                              className="bg-[#0A0A0A] border border-[#2a2a2a] rounded-lg px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-[#FF4500]"
+                              className={inputClass}
                             />
                           ))}
                         </div>
@@ -383,15 +394,15 @@ export default function AdminDashboard() {
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleVerify(result.id, 'approve')}
-                            className="flex-1 bg-green-600 hover:bg-green-700 text-white rounded-lg py-2 text-sm font-bold transition-colors"
+                            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg py-2 text-sm font-semibold transition-colors"
                           >
-                            ✅ Approve
+                            Approve
                           </button>
                           <button
                             onClick={() => handleVerify(result.id, 'reject')}
-                            className="flex-1 bg-red-600 hover:bg-red-700 text-white rounded-lg py-2 text-sm font-bold transition-colors"
+                            className="flex-1 bg-red-500 hover:bg-red-600 text-white rounded-lg py-2 text-sm font-semibold transition-colors"
                           >
-                            ❌ Reject
+                            Reject
                           </button>
                         </div>
                       </div>
@@ -404,22 +415,22 @@ export default function AdminDashboard() {
               {activeTab === 'users' && (
                 <div className="space-y-2">
                   {users.map((user) => (
-                    <div key={user.id} className="game-card p-3">
+                    <div key={user.id} className="bg-white rounded-xl border border-gray-200 p-3 shadow-sm">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#FF4500] to-[#FFD700] flex items-center justify-center text-sm font-bold text-white">
-                            {user.ff_name?.[0] || '?'}
+                          <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-sm font-semibold text-indigo-600">
+                            {user.ff_name?.[0]?.toUpperCase() || '?'}
                           </div>
                           <div>
-                            <p className="text-white text-sm font-bold">{user.ff_name || user.name || 'No Name'}</p>
+                            <p className="text-gray-900 text-sm font-medium">{user.ff_name || user.name || 'No Name'}</p>
                             <p className="text-gray-500 text-xs">{user.phone}</p>
-                            <p className="text-gray-600 text-xs">UID: {user.ff_uid || 'Not bound'}</p>
+                            <p className="text-gray-400 text-xs">UID: {user.ff_uid || 'Not bound'}</p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-[#FFD700] text-sm font-bold">{formatCurrency(user.wallet_balance)}</p>
+                          <p className="text-emerald-600 text-sm font-semibold">{formatCurrency(user.wallet_balance)}</p>
                           {user.is_admin && (
-                            <span className="text-[#FF4500] text-xs">ADMIN</span>
+                            <span className="text-indigo-600 text-xs font-medium">Admin</span>
                           )}
                         </div>
                       </div>
@@ -430,33 +441,33 @@ export default function AdminDashboard() {
 
               {/* Wallet Management */}
               {activeTab === 'wallet' && (
-                <div className="space-y-4">
+                <div className="space-y-6">
                   <div>
-                    <h3 className="text-white font-bold mb-3">💰 Add Money Requests</h3>
+                    <h3 className="text-gray-900 font-semibold mb-3">Add Money Requests</h3>
                     {addMoneyReqs.length === 0 ? (
-                      <p className="text-gray-500 text-sm">No pending requests</p>
+                      <p className="text-gray-400 text-sm">No pending requests</p>
                     ) : (
                       <div className="space-y-2">
                         {addMoneyReqs.map((req) => (
-                          <div key={req.id} className="game-card p-3">
-                            <div className="flex items-center justify-between mb-2">
+                          <div key={req.id} className="bg-white rounded-xl border border-gray-200 p-3 shadow-sm">
+                            <div className="flex items-center justify-between">
                               <div>
-                                <p className="text-white text-sm font-bold">{req.user?.ff_name || req.user?.phone}</p>
-                                <p className="text-[#FFD700] font-bold">{formatCurrency(req.amount)}</p>
-                                <p className="text-gray-500 text-xs">{formatDate(req.created_at)}</p>
+                                <p className="text-gray-900 text-sm font-medium">{req.user?.ff_name || req.user?.phone}</p>
+                                <p className="text-emerald-600 font-semibold">{formatCurrency(req.amount)}</p>
+                                <p className="text-gray-400 text-xs">{formatDate(req.created_at)}</p>
                               </div>
                               <div className="flex gap-2">
                                 <button
                                   onClick={async () => { await approveAddMoney(req.id, 'approve'); fetchData(); }}
-                                  className="bg-green-600 text-white rounded-lg px-3 py-1 text-xs font-bold"
+                                  className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors"
                                 >
-                                  ✅ Approve
+                                  Approve
                                 </button>
                                 <button
                                   onClick={async () => { await approveAddMoney(req.id, 'reject'); fetchData(); }}
-                                  className="bg-red-600 text-white rounded-lg px-3 py-1 text-xs font-bold"
+                                  className="bg-red-500 hover:bg-red-600 text-white rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors"
                                 >
-                                  ❌ Reject
+                                  Reject
                                 </button>
                               </div>
                             </div>
@@ -467,32 +478,32 @@ export default function AdminDashboard() {
                   </div>
 
                   <div>
-                    <h3 className="text-white font-bold mb-3">🏦 Withdrawal Requests</h3>
+                    <h3 className="text-gray-900 font-semibold mb-3">Withdrawal Requests</h3>
                     {withdrawReqs.length === 0 ? (
-                      <p className="text-gray-500 text-sm">No pending requests</p>
+                      <p className="text-gray-400 text-sm">No pending requests</p>
                     ) : (
                       <div className="space-y-2">
                         {withdrawReqs.map((req) => (
-                          <div key={req.id} className="game-card p-3">
-                            <div className="flex items-center justify-between mb-2">
+                          <div key={req.id} className="bg-white rounded-xl border border-gray-200 p-3 shadow-sm">
+                            <div className="flex items-center justify-between">
                               <div>
-                                <p className="text-white text-sm font-bold">{req.user?.ff_name || req.user?.phone}</p>
-                                <p className="text-[#FFD700] font-bold">{formatCurrency(req.amount)}</p>
-                                <p className="text-gray-500 text-xs">UPI: {req.upi_id}</p>
-                                <p className="text-gray-500 text-xs">{formatDate(req.created_at)}</p>
+                                <p className="text-gray-900 text-sm font-medium">{req.user?.ff_name || req.user?.phone}</p>
+                                <p className="text-emerald-600 font-semibold">{formatCurrency(req.amount)}</p>
+                                <p className="text-gray-400 text-xs">UPI: {req.upi_id}</p>
+                                <p className="text-gray-400 text-xs">{formatDate(req.created_at)}</p>
                               </div>
                               <div className="flex gap-2">
                                 <button
                                   onClick={async () => { await approveWithdrawal(req.id, 'approve'); fetchData(); }}
-                                  className="bg-green-600 text-white rounded-lg px-3 py-1 text-xs font-bold"
+                                  className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors"
                                 >
-                                  ✅ Approve
+                                  Approve
                                 </button>
                                 <button
                                   onClick={async () => { await approveWithdrawal(req.id, 'reject'); fetchData(); }}
-                                  className="bg-red-600 text-white rounded-lg px-3 py-1 text-xs font-bold"
+                                  className="bg-red-500 hover:bg-red-600 text-white rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors"
                                 >
-                                  ❌ Reject
+                                  Reject
                                 </button>
                               </div>
                             </div>
@@ -506,8 +517,8 @@ export default function AdminDashboard() {
 
               {/* Award Bonus */}
               {activeTab === 'bonus' && (
-                <div className="game-card p-4 max-w-md">
-                  <h3 className="text-white font-bold mb-4">🏆 Award Top Killer Bonus</h3>
+                <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm max-w-md">
+                  <h3 className="text-gray-900 font-semibold mb-4">Award Bonus</h3>
                   <div className="space-y-3">
                     {[
                       { key: 'user_id', placeholder: 'User ID', type: 'number' },
@@ -521,11 +532,11 @@ export default function AdminDashboard() {
                         placeholder={placeholder}
                         value={bonusData[key as keyof typeof bonusData]}
                         onChange={(e) => setBonusData({ ...bonusData, [key]: e.target.value })}
-                        className="w-full bg-[#0A0A0A] border border-[#2a2a2a] rounded-lg px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-[#FFD700]"
+                        className={inputClass}
                       />
                     ))}
-                    <button onClick={handleAwardBonus} className="btn-primary w-full">
-                      🏆 AWARD BONUS
+                    <button onClick={handleAwardBonus} className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 px-4 rounded-lg w-full transition-colors">
+                      Award Bonus
                     </button>
                   </div>
                 </div>
@@ -535,19 +546,19 @@ export default function AdminDashboard() {
               {activeTab === 'referrals' && (
                 <div className="space-y-2">
                   {referrals.map((ref) => (
-                    <div key={ref.id} className="game-card p-3">
+                    <div key={ref.id} className="bg-white rounded-xl border border-gray-200 p-3 shadow-sm">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-white text-sm">
-                            <span className="text-[#FF4500]">{ref.referrer?.ff_name || ref.referrer?.phone}</span>
+                          <p className="text-gray-900 text-sm">
+                            <span className="font-medium">{ref.referrer?.ff_name || ref.referrer?.phone}</span>
                             {' → '}
-                            <span className="text-[#FFD700]">{ref.referred?.ff_name || ref.referred?.phone}</span>
+                            <span className="text-gray-600">{ref.referred?.ff_name || ref.referred?.phone}</span>
                           </p>
-                          <p className="text-gray-500 text-xs">{formatDate(ref.created_at)}</p>
+                          <p className="text-gray-400 text-xs">{formatDate(ref.created_at)}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-green-400 font-bold text-sm">+{formatCurrency(ref.reward_amount)}</p>
-                          <p className={`text-xs ${ref.status === 'credited' ? 'text-green-400' : 'text-[#FFD700]'}`}>
+                          <p className="text-emerald-600 font-semibold text-sm">+{formatCurrency(ref.reward_amount)}</p>
+                          <p className={`text-xs ${ref.status === 'credited' ? 'text-emerald-500' : 'text-amber-500'}`}>
                             {ref.status}
                           </p>
                         </div>
@@ -559,8 +570,8 @@ export default function AdminDashboard() {
 
               {/* Settings */}
               {activeTab === 'settings' && (
-                <div className="game-card p-4 max-w-md">
-                  <h3 className="text-white font-bold mb-4">⚙️ Platform Settings</h3>
+                <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm max-w-md">
+                  <h3 className="text-gray-900 font-semibold mb-4">Platform Settings</h3>
                   <div className="space-y-3">
                     {[
                       { key: 'signup_bonus', label: 'Signup Bonus (₹)' },
@@ -572,17 +583,17 @@ export default function AdminDashboard() {
                       { key: 'min_withdraw_amount', label: 'Min Withdrawal Amount (₹)' },
                     ].map(({ key, label }) => (
                       <div key={key}>
-                        <label className="text-gray-400 text-xs mb-1 block">{label}</label>
+                        <label className="text-gray-600 text-xs mb-1 block font-medium">{label}</label>
                         <input
                           type="number"
                           value={settings[key] || ''}
                           onChange={(e) => setSettings({ ...settings, [key]: e.target.value })}
-                          className="w-full bg-[#0A0A0A] border border-[#2a2a2a] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#FF4500]"
+                          className={inputClass}
                         />
                       </div>
                     ))}
-                    <button onClick={handleSaveSettings} className="btn-primary w-full mt-2">
-                      💾 SAVE SETTINGS
+                    <button onClick={handleSaveSettings} className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 px-4 rounded-lg w-full mt-2 transition-colors">
+                      Save Settings
                     </button>
                   </div>
                 </div>
