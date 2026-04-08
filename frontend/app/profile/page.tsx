@@ -113,7 +113,7 @@ export default function ProfilePage() {
               {/* VIP Level Badge */}
               <div className="mt-1 relative w-10 h-10">
                 <Image
-                  src="/images/king (1).png"
+                  src="/images/king%20(1).png"
                   alt="VIP Level"
                   fill
                   className="object-contain"
