@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { getReferrals } from '@/lib/api';
 import { formatCurrency, formatDate } from '@/lib/utils';
-import { ArrowLeft, Copy, Share2, Users, Gift, Check } from 'lucide-react';
+import { ArrowLeft, Share2, Users, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import BottomNav from '@/components/BottomNav';
 
@@ -84,18 +85,28 @@ export default function ReferralPage() {
 
       <div className="px-4 pt-4 space-y-4">
         {/* Referral Banner */}
-        <div className="bg-indigo-600 rounded-2xl p-5 text-center">
-          <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-3">
-            <Gift size={24} className="text-white" />
+        <div className="relative rounded-2xl overflow-hidden mb-0">
+          <div className="absolute inset-0">
+            <Image
+              src="/images/invitation_bg-20719388.png"
+              alt="Referral Background"
+              fill
+              className="object-cover"
+            />
           </div>
-          <h2 className="text-2xl font-bold text-white">Refer & Earn</h2>
-          <p className="text-indigo-100 text-sm mt-1">
-            Invite friends and earn{' '}
-            <span className="text-white font-semibold">
-              {data ? formatCurrency(parseFloat(data.referrer_reward)) : '₹...'} 
-            </span>{' '}
-            per referral!
-          </p>
+          <div className="relative z-10 bg-indigo-600/80 p-5 text-center">
+            <div className="relative w-12 h-12 mx-auto mb-3">
+              <Image src="/images/gift.png" alt="Gift" fill className="object-contain" />
+            </div>
+            <h2 className="text-2xl font-bold text-white">Refer &amp; Earn</h2>
+            <p className="text-indigo-100 text-sm mt-1">
+              Invite friends and earn{' '}
+              <span className="text-white font-semibold">
+                {data ? formatCurrency(parseFloat(data.referrer_reward)) : '₹...'} 
+              </span>{' '}
+              per referral!
+            </p>
+          </div>
         </div>
 
         {/* How it Works */}
@@ -137,7 +148,13 @@ export default function ReferralPage() {
                   : 'border-gray-200 bg-white text-gray-500 hover:bg-gray-50'
               }`}
             >
-              {copied ? <Check size={20} /> : <Copy size={20} />}
+              {copied ? (
+                <Check size={20} />
+              ) : (
+                <div className="relative w-5 h-5">
+                  <Image src="/images/copy.png" alt="Copy" fill className="object-contain" />
+                </div>
+              )}
             </button>
           </div>
           {copied && <p className="text-emerald-600 text-sm text-center mt-2">Copied!</p>}

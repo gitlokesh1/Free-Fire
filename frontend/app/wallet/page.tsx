@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { getWallet, requestAddMoney, requestWithdraw } from '@/lib/api';
 import { formatCurrency, formatDate } from '@/lib/utils';
-import { ArrowLeft, Plus, Minus, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
+import { ArrowLeft, Plus, Minus, TrendingUp, TrendingDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import BottomNav from '@/components/BottomNav';
 
@@ -107,27 +108,39 @@ export default function WalletPage() {
 
       <div className="px-4 pt-4 space-y-4">
         {/* Balance Card */}
-        <div className="bg-indigo-600 rounded-2xl p-6 text-center">
-          <div className="flex items-center justify-center gap-2 mb-1">
-            <Wallet size={18} className="text-indigo-200" />
-            <p className="text-indigo-200 text-sm">Total Balance</p>
+        <div className="relative rounded-2xl overflow-hidden mb-0">
+          <div className="absolute inset-0">
+            <Image
+              src="/images/walletbg-1dc79077.png"
+              alt="Wallet Background"
+              fill
+              className="object-cover"
+            />
           </div>
-          <p className="text-4xl font-bold text-white">
-            {loading ? '...' : formatCurrency(balance)}
-          </p>
-          <div className="flex gap-3 mt-5">
-            <button
-              onClick={() => { setShowAddMoney(true); setShowWithdraw(false); setError(''); setSuccess(''); }}
-              className="flex-1 flex items-center justify-center gap-2 bg-white text-indigo-600 rounded-xl py-3 font-semibold transition-colors hover:bg-indigo-50"
-            >
-              <Plus size={18} /> Add Money
-            </button>
-            <button
-              onClick={() => { setShowWithdraw(true); setShowAddMoney(false); setError(''); setSuccess(''); }}
-              className="flex-1 flex items-center justify-center gap-2 bg-indigo-500 text-white rounded-xl py-3 font-semibold transition-colors hover:bg-indigo-400"
-            >
-              <Minus size={18} /> Withdraw
-            </button>
+          <div className="relative z-10 p-6 text-center bg-indigo-600/80">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <div className="relative w-5 h-5">
+                <Image src="/images/wallet.png" alt="Wallet" fill className="object-contain invert" />
+              </div>
+              <p className="text-indigo-200 text-sm">Total Balance</p>
+            </div>
+            <p className="text-4xl font-bold text-white">
+              {loading ? '...' : formatCurrency(balance)}
+            </p>
+            <div className="flex gap-3 mt-5">
+              <button
+                onClick={() => { setShowAddMoney(true); setShowWithdraw(false); setError(''); setSuccess(''); }}
+                className="flex-1 flex items-center justify-center gap-2 bg-white text-indigo-600 rounded-xl py-3 font-semibold transition-colors hover:bg-indigo-50"
+              >
+                <Plus size={18} /> Add Money
+              </button>
+              <button
+                onClick={() => { setShowWithdraw(true); setShowAddMoney(false); setError(''); setSuccess(''); }}
+                className="flex-1 flex items-center justify-center gap-2 bg-indigo-500 text-white rounded-xl py-3 font-semibold transition-colors hover:bg-indigo-400"
+              >
+                <Minus size={18} /> Withdraw
+              </button>
+            </div>
           </div>
         </div>
 
@@ -142,6 +155,27 @@ export default function WalletPage() {
         {showAddMoney && (
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
             <h3 className="text-gray-900 font-semibold mb-3">Add Money</h3>
+
+            {/* Payment Methods */}
+            <div className="mb-3">
+              <p className="text-gray-500 text-xs mb-2">Pay via</p>
+              <div className="grid grid-cols-4 gap-2">
+                {[
+                  { src: '/images/Paytm.svg', label: 'Paytm' },
+                  { src: '/images/PhonePe.svg', label: 'PhonePe' },
+                  { src: '/images/Bank UPI.svg', label: 'Bank UPI' },
+                  { src: '/images/Google.svg', label: 'GPay' },
+                ].map((pm) => (
+                  <div key={pm.label} className="flex flex-col items-center gap-1 border border-gray-200 rounded-lg p-2 cursor-pointer hover:border-indigo-300">
+                    <div className="relative w-8 h-8">
+                      <Image src={pm.src} alt={pm.label} fill className="object-contain" />
+                    </div>
+                    <span className="text-xs text-gray-500">{pm.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             <div className="grid grid-cols-4 gap-2 mb-3">
               {presetAmounts.map((amount) => (
                 <button
