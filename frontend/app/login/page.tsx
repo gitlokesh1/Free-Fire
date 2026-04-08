@@ -2,9 +2,10 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { sendOTP, verifyOTP } from '@/lib/api';
 import { setAuth } from '@/lib/utils';
-import { ArrowLeft, Trophy } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -92,12 +93,32 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <div className="flex-1 flex flex-col justify-center px-6 max-w-sm mx-auto w-full">
+    <div className="min-h-screen flex flex-col bg-gray-50 relative">
+      {/* Background image */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/login_banner.34f15f30.png"
+          alt="Login Background"
+          fill
+          className="object-cover opacity-20"
+          priority
+        />
+      </div>
+
+      <div className="flex-1 flex flex-col justify-center px-6 max-w-sm mx-auto w-full relative z-10">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <Trophy size={28} className="text-white" />
+          <div className="mx-auto mb-4 relative w-20 h-20">
+            <Image
+              src="/images/biglogo.png"
+              alt="BattleZone Arena"
+              fill
+              className="object-contain"
+              onError={(e) => {
+                const target = e.currentTarget as HTMLImageElement;
+                target.style.display = 'none';
+              }}
+            />
           </div>
           <h1 className="text-2xl font-bold text-gray-900">BattleZone Arena</h1>
           <p className="text-gray-500 text-sm mt-1">Free Fire Tournament Platform</p>

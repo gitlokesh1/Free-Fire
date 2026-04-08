@@ -60,4 +60,5 @@ body {
   background: #FFFFFF;
   border-top: 1px solid #E5E7EB;
   z-index: 1000;
+  overflow: hidden;
 }

@@ -5,6 +5,7 @@ import { getProfile } from '@/lib/api';
 import { clearAuth, formatCurrency } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import BottomNav from '@/components/BottomNav';
 import { LogOut, ChevronRight, Trophy, Swords, Wallet, Users, HelpCircle, Shield } from 'lucide-react';
 
@@ -69,14 +70,37 @@ export default function ProfilePage() {
   ];
 
   return (
-    <div className="min-h-screen pb-20 bg-gray-50">
-      <div className="px-4 pt-6 pb-4">
+    <div className="min-h-screen pb-20 bg-gray-50 relative">
+      {/* Background image */}
+      <div className="absolute top-0 left-0 right-0 h-48 z-0">
+        <Image
+          src="/images/myProfilebg.298e3612.png"
+          alt="Profile Background"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50" />
+      </div>
+
+      <div className="px-4 pt-6 pb-4 relative z-10">
         {/* Profile Header Card */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 mb-4">
           <div className="flex items-center gap-4 mb-5">
             {/* Avatar */}
-            <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center text-2xl font-bold text-indigo-600 flex-shrink-0 border-2 border-indigo-200">
-              {(profile.user.ff_name || profile.user.name || '?')[0]?.toUpperCase()}
+            <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center text-2xl font-bold text-indigo-600 flex-shrink-0 border-2 border-indigo-200 overflow-hidden relative">
+              <Image
+                src="/images/avatar.svg"
+                alt="Avatar"
+                fill
+                className="object-cover"
+                onError={(e) => {
+                  const target = e.currentTarget as HTMLImageElement;
+                  target.style.display = 'none';
+                }}
+              />
+              <span className="relative z-10">
+                {(profile.user.ff_name || profile.user.name || '?')[0]?.toUpperCase()}
+              </span>
             </div>
             <div className="flex-1">
               <h2 className="text-xl font-semibold text-gray-900">
@@ -86,6 +110,15 @@ export default function ProfilePage() {
                 <p className="text-gray-500 text-sm">{profile.user.name}</p>
               )}
               <p className="text-gray-400 text-xs">{profile.user.phone}</p>
+              {/* VIP Level Badge */}
+              <div className="mt-1 relative w-10 h-10">
+                <Image
+                  src="/images/king (1).png"
+                  alt="VIP Level"
+                  fill
+                  className="object-contain"
+                />
+              </div>
               {profile.user.is_admin && (
                 <span className="text-xs bg-red-50 text-red-600 border border-red-200 px-2 py-0.5 rounded-full">
                   Admin
